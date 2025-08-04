@@ -1,0 +1,6 @@
+resource_group_name="Terraform-Rg"
+resource_location_name="eastus"
+owner_tag="gokul"
+env_tag="dev"
+vnet_name="terraform-vnet"
+address_space="10.0.0.0/16"
