@@ -1,20 +1,49 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Terraform Modules for Azure
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+This repository contains reusable Terraform modules to provision and manage resources in Microsoft Azure.
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## Modules Included
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+- **Resource Group Module**  
+  Creates Azure Resource Groups.
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+- **Virtual Network (VNet) Module**  
+  Provisions VNets with configurable address spaces and subnets.
+
+- **Virtual Machine (VM) Module**  
+  Deploys Azure Virtual Machines with network interface and disk configurations.
+
+## Usage
+
+Each module is defined in its own subdirectory:
+
+- `azure_rg/`
+- `azure_vnet/`
+- `azure_vm/`
+
+### Example
+
+You can use these modules like this in your root Terraform file:
+
+```hcl
+module "resource_group" {
+  source     = "./azure_rg"
+  rg_name    = "my-rg"
+  location   = "East US"
+}
+
+module "vnet" {
+  source              = "./azure_vnet"
+  vnet_name           = "my-vnet"
+  address_space       = ["10.0.0.0/16"]
+  location            = "East US"
+  resource_group_name = module.resource_group.rg_name
+}
+
+module "vm" {
+  source              = "./azure_vm"
+  vm_name             = "my-vm"
+  location            = "East US"
+  resource_group_name = module.resource_group.rg_name
+  subnet_id           = module.vnet.subnet_id
+}
